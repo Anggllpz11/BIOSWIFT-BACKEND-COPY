@@ -8,6 +8,7 @@ import { IModos_Fallos } from "./IModos_Fallos.interface";
 import { IVisitas } from "../../../visitas/domain/interfaces/IVisitas.interface";
 import { ISolicitudServicio } from "../../../solicitudes/domain/interfaces/Solicitudes_Servicios.interface";
 import { IOrdenes_Sub_Estados } from "./IOrdenes_sub_estados.interface";
+import { IFallo_Sistemas } from "./IFallo_Sistemas.interface";
 
 export interface IEntrega {
   id_entrega?: IUser | ObjectId;
@@ -27,24 +28,32 @@ export interface IOrdenCambio {
   comentario: string;
 }
 
+export interface IResultadoOrden {
+  id_fallo_sistema?: IFallo_Sistemas | ObjectId;
+  ids_modos_fallos?: IModos_Fallos[] | ObjectId[];
+  ids_causas_fallos?: IFallas_Causas[] | ObjectId[];
+  comentarios_finales?: string;
+  solicitud_dar_baja?: boolean;
+  accion_ejecutada?: string;
+}
 
 export interface IOrden extends Document {
   id_solicitud_servicio?: ISolicitudServicio | ObjectId;
   id_orden_estado?: IOrdenes_Estados | ObjectId;
   ids_visitas?: IVisitas[] | ObjectId[];
   orden_cambios?: IOrdenCambio[];
+  resultado_orden?: IResultadoOrden;
   id_creador?: IUser | ObjectId;
   id_cerrador?: IUser | ObjectId;
-  ids_fallas_acciones?: IFallas_Acciones[] | ObjectId[];
-  ids_fallas_causas?: IFallas_Causas[] | ObjectId[];
-  ids_falla_modos?: IFallas_Modos[] | ObjectId[];
-  modos_fallas_ids?: IModos_Fallos[] | ObjectId[];
+  id_anulador?: IUser | ObjectId;
   entrega?: IEntrega;
   recibe?: IRecibe;
   fecha_sub_estado?: string;
   creacion?: string;
   cierre?: string;
   observaciones_cierre?: string;
+  anulacion_date?: string;
+  observaciones_anulacion?: string;
   total?: number;
   solicitar_dado_baja?: boolean;
 }

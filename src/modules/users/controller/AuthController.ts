@@ -20,39 +20,39 @@ import { roleEntity } from "../domain/entities/Roles.entity";
 export class AuthController implements IAuthController {
     
   @Post("/register")
-public async registerUser(@Body() user: IUser): Promise<BasicResponse | ErrorResponse> {
-  try {
-    if (user) {
-      LogSuccess(`[/api/auth/register] Register New User: ${user.name}`);
-      
-      // Asegúrate de que los roles se manejen correctamente
-      const roleNames: string[] = user.roles.map((role) => role.name) || ['user']; // Obtén los nombres de los roles
-      
-      // Llama a registerUser para registrar al usuario y asignar roles
-      await registerUser(user, roleNames);
+  public async registerUser(@Body() user: IUser): Promise<BasicResponse | ErrorResponse> {
+    try {
+      if (user) {
+        LogSuccess(`[/api/auth/register] Register New User: ${user.name}`);
+        
+        // Asegúrate de que los roles se manejen correctamente
+        const roleNames: string[] = user.roles.map((role) => role.name) || ['user']; 
+        
+        // Llama a registerUser para registrar al usuario y asignar roles
+        await registerUser(user, roleNames);
 
-      LogSuccess(`[/api/auth/register] Registered User: ${user.username}`);
+        LogSuccess(`[/api/auth/register] Registered User: ${user.username}`);
 
-      // Devuelve una respuesta exitosa sin la propiedad 'user'
+        // Devuelve una respuesta exitosa sin la propiedad 'user'
+        return {
+          message: `User Registered successfully: ${user.name}`,
+        };
+      } else {
+        LogWarning(`[/api/auth/register] Register needs user Entity`);
+        return {
+          error: 'User not Registered',
+          message: 'Please, provide a User Entity to create.',
+        };
+      }
+    } catch (error) {
+      const errorMessage = (error instanceof Error) ? error.message : 'An error occurred while registering the user.';
+      LogError(`[/api/auth/register] Error registering user: ${error}`);
       return {
-        message: `User Registered successfully: ${user.name}`,
-      };
-    } else {
-      LogWarning(`[/api/auth/register] Register needs user Entity`);
-      return {
-        error: 'User not Registered',
-        message: 'Please, provide a User Entity to create.',
+        error: 'Error registering user',
+        message: errorMessage
       };
     }
-  } catch (error) {
-    const errorMessage = (error instanceof Error) ? error.message : 'An error occurred while registering the user.';
-    LogError(`[/api/auth/register] Error registering user: ${error}`);
-    return {
-      error: 'Error registering user',
-      message: errorMessage
-    };
   }
-}
 
 @Post("/login")
 public async loginUser(@Body() auth: IAuth): Promise<AuthResponse | ErrorResponse> {

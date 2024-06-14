@@ -31,24 +31,29 @@ authRouter.route('/register')
         console.log('Roles received:', roles);
         let hashedPassword = '';
 
-        if (number && username && password && name && cedula && telefono && email && more_info && roles) {
+        // Verifica si los campos obligatorios están presentes
+        if (username && password && name && cedula && telefono && email && roles) {
 
             // Obtain Password in Request and cypher
             let hashedPassword = bcrypt.hashSync(password, 8);
 
             let newUser: IUser = {
-                number: number,
                 username: username,
                 password: hashedPassword,
                 name: name,
                 cedula: cedula,
                 telefono: telefono,
                 email: email,
-                more_info: more_info,
                 roles: roles,
             };
 
             // Optional fields
+            if (number) {
+                newUser.number = number;
+            }
+            if (more_info) {
+                newUser.more_info = more_info;
+            }
             if (type) {
                 newUser.type = type;
             }

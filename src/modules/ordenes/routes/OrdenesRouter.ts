@@ -3,6 +3,7 @@ import { LogInfo } from "../../../utils/logger";
 import bodyParser from 'body-parser';
 import { verifyToken } from "../middlewares/verifyToken.middleware";
 import { OrdenesController } from "../controller/OrdenesController";  // Asegúrate de importar el controlador correcto para Ordenes
+import SearchOrdenesController from "../controller/SearchOrdenesController";
 
 let jsonParser = bodyParser.json();
 

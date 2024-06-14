@@ -5,14 +5,14 @@ import { roleEntity } from "./Roles.entity";
 export const userEntity = () => {
     let userSchema = new mongoose.Schema<IUser>(
         {
-            number: { type: Number, required: true },
+            number: { type: Number, required: false },
             username: { type: String, required: true },
             password: { type: String, required: true },
             name: { type: String, required: true },
             cedula: { type: Number, required: true },
             telefono: { type: String, required: true },
             email: { type: String, required: true },
-            more_info: { type: String, required: true },
+            more_info: { type: String, required: false },
             // New spaces related to Collection Roles
             roles: [{ type: Schema.Types.ObjectId, ref: "Roles" }],
             type: { type: String, required: false }, // Technician type

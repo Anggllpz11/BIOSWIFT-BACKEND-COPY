@@ -51,6 +51,14 @@ import visitasRouter from '../modules/visitas/routes/VisitasRouter';
 import ordenesRouter from '../modules/ordenes/routes/OrdenesRouter';
 import cotizacionesRouter from '../modules/ordenes/routes/CotizacionesRouter';
 import cotizacionesEstadosRouter from '../modules/ordenes/routes/Cotizaciones_EstadosRouter';
+import solicitudBodegaEstadosRouter from '../modules/solicitudes_bodega/routes/SolicitudBodegaEstadosRouter';
+import solicitudesBodegaRouter from '../modules/solicitudes_bodega/routes/SolicitudesBodegaRouter';
+import solicitudesDadoBajaEstadosRouter from '../modules/solicitudes_dado_baja/routes/SolicitudesDadoBajaEstadosRouter';
+import solicitudesDadoBajaRouter from '../modules/solicitudes_dado_baja/routes/SolicitudesDadoBajaRouter';
+import departamentosRouter from '../modules/departamentos/routes/DepartamentosRouter';
+import municipiosRouter from '../modules/departamentos/routes/MunicipiosRouter';
+import searchOrdenesRouter from '../modules/ordenes/routes/SearchOrdenesRouter';
+import advancedFilterOrdenesRouter from '../modules/ordenes/routes/AdvancedFilterOrdenesRouter';
 
 
 // * Server Instance
@@ -131,8 +139,26 @@ server.use('/ordenes', ordenesRouter) // http://localhost:8000/api/ordenes --> o
 server.use('/cotizaciones-estados', cotizacionesEstadosRouter) // http://localhost:8000/api/cotizaciones-estados --> cotizacionesEstadosRouter
 server.use('/cotizaciones', cotizacionesRouter) // http://localhost:8000/api/cotizaciones --> cotizacionesRouter
 
+// Search  & Filters ordenes module routes
+
+server.use('/search/ordenes', searchOrdenesRouter) // http://localhost:8000/api/search/ordenes --> searchOrdenesRouter
+server.use('/advanced-filters-ordenes', advancedFilterOrdenesRouter) // http://localhost:8000/api/advanced-filters-ordenes --> advancedFilterOrdenesRouter
 
 
+// * Redirections to Routers & Controllers -- MODULE SOLICITUDES_BODEGA
+
+server.use('/solicitudes-bodega-estados', solicitudBodegaEstadosRouter) // http://localhost:8000/api/solicitudes-bodega-estados --> solicitudBodegaEstadosRouter
+server.use('/solicitudes-bodega', solicitudesBodegaRouter) // http://localhost:8000/api/solicitudes-bodega --> solicitudesBodegaRouter
+
+// * Redirections to Routers & Controllers -- MODULE SOLICITUDES_DADO_BAJA
+
+server.use('/solicitudes-dado-baja-estados', solicitudesDadoBajaEstadosRouter) // http://localhost:8000/api/solicitudes-dado-baja-estados --> solicitudesDadoBajaEstadosRouter
+server.use('/solicitudes-dado-baja', solicitudesDadoBajaRouter) // http://localhost:8000/api/solicitudes-dado-baja --> solicitudesDadoBajaRouter
+
+// * Redirections to Routers & Controllers -- MODULE DEPARTAMENTOS
+
+server.use('/departamentos', departamentosRouter) // http://localhost:8000/api/departamentos --> departamentosRouter
+server.use('/municipios', municipiosRouter) // http://localhost:8000/api/municipios --> municipiosRouter
 
 
 export default server;

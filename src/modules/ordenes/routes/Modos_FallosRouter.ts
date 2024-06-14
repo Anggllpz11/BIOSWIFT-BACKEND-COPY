@@ -17,8 +17,8 @@ modosFallosRouter.route('/')
     let id: any = req?.query?.id;
 
     // Paginación
-    let page: any = req?.query?.page || 1;
-    let limit: any = req?.query?.limit || 10;
+    let page: any = req?.query?.page;
+    let limit: any = req?.query?.limit;
 
     LogInfo(`Query Param: ${id}`);
     // Instancia del controlador para ejecutar un método

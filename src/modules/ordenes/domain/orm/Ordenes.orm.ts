@@ -24,6 +24,7 @@ import { tipoEquipoEntity } from "../../../equipos/domain/entities/TipoEquipo.en
 import { visitasEstadosEntity } from "../../../visitas/domain/entities/Visitas_Estados.entity";
 import { protocolosEntity } from "../../../procesos_&_protocolos/domain/entities/Protocolos.entity";
 import { camposEntity } from "../../../procesos_&_protocolos/domain/entities/Campos.entity";
+import { falloSistemasEntity } from "../entities/Fallo_Sistemas.entity";
 // Import other necessary entities for relationships
 
 // CRUD
@@ -55,7 +56,6 @@ export const getAllOrdenes = async (page: number, limit: number): Promise<any[] 
     const visitaEstadoModel = visitasEstadosEntity();
     const protocolosModel = protocolosEntity();
     const camposModel = camposEntity();
-    // Import and define other necessary models for population
 
     const ordenes: IOrden[] = await ordenModel
       .find()
@@ -64,7 +64,7 @@ export const getAllOrdenes = async (page: number, limit: number): Promise<any[] 
       // Populate relationships for each field as needed
       .populate({
         path: 'id_solicitud_servicio',
-        model: solicitudServicioModel, // Assuming the model name for SolicitudServicio
+        model: solicitudServicioModel, 
         populate : [
           {
             path: 'id_creador',
@@ -182,40 +182,19 @@ export const getAllOrdenes = async (page: number, limit: number): Promise<any[] 
         select: 'number username name cedula telefono email more_info roles type titulo reg_invima',
       })
       .populate({
-        path: 'ids_fallas_acciones',
-        model: fallasAccionesModel,
-      })
-      .populate({
-        path: 'ids_fallas_causas',
-        model: fallasCausasModel,
-      })
-      .populate({
-        path: 'ids_falla_modos',
-        model: fallasModosModel,
-      })
-      .populate({
-        path: 'modos_fallas_ids',
-        model: modosFallosModel,
-      })
-      .populate({
         path: 'entrega.id_entrega',
         model: userModel,
         select: 'number username name cedula telefono email more_info roles type titulo reg_invima',
       })
-      .populate({
-        path: 'modos_fallas_ids',
-        model: modosFallosModel,
-      })
-      // Populate other relationships similarly
       .exec() as IOrden[];
 
     response.ordenes = ordenes;
 
     // Count total documents in the Ordenes collection
-    await ordenModel.countDocuments().then((total: number) => {
-      response.totalPages = Math.ceil(total / limit);
-      response.currentPage = page;
-    });
+    const totalItems = await ordenModel.countDocuments();
+    response.totalPages = Math.ceil(totalItems / limit);
+    response.currentPage = page;
+    response.totalItems = totalItems;
 
     return response;
   } catch (error) {
@@ -236,6 +215,7 @@ export const getOrdenByID = async (id: string): Promise<IOrden | undefined> => {
     const fallasCausasModel = fallasCausasEntity(); 
     const fallasModosModel = fallasModosEntity();
     const modosFallosModel = modosFallosEntity();
+    const fallosSistemaModel = falloSistemasEntity();
     const servicioModel = serviciosEntity();
     const solicitudEstadoModel = SolicitudesEstadosEntity();
     const equipoModel = equipoEntity();
@@ -255,7 +235,7 @@ export const getOrdenByID = async (id: string): Promise<IOrden | undefined> => {
       .findById(id)
       .populate({
         path: 'id_solicitud_servicio',
-        model: solicitudServicioModel, // Assuming the model name for SolicitudServicio
+        model: solicitudServicioModel, 
         populate : [
           {
             path: 'id_creador',
@@ -373,22 +353,6 @@ export const getOrdenByID = async (id: string): Promise<IOrden | undefined> => {
         select: 'number username name cedula telefono email more_info roles type titulo reg_invima',
       })
       .populate({
-        path: 'ids_fallas_acciones',
-        model: fallasAccionesModel,
-      })
-      .populate({
-        path: 'ids_fallas_causas',
-        model: fallasCausasModel,
-      })
-      .populate({
-        path: 'ids_falla_modos',
-        model: fallasModosModel,
-      })
-      .populate({
-        path: 'modos_fallas_ids',
-        model: modosFallosModel,
-      })
-      .populate({
         path: 'entrega.id_entrega',
         model: userModel,
         select: 'number username name cedula telefono email more_info roles type titulo reg_invima',
@@ -403,10 +367,17 @@ export const getOrdenByID = async (id: string): Promise<IOrden | undefined> => {
         model: ordenSubEstadoModel,
       })
       .populate({
-        path: 'modos_fallas_ids',
+        path: 'resultado_orden.id_fallo_sistema',
+        model: fallosSistemaModel,
+      })
+      .populate({
+        path: 'resultado_orden.ids_modos_fallos',
         model: modosFallosModel,
       })
-      // Populate other relationships similarly
+      .populate({
+        path: 'resultado_orden.ids_causas_fallos',
+        model: fallasCausasModel,
+      })
       .exec();
   } catch (error) {
     LogError(`[ORM ERROR]: Obtaining Orden By ID: ${error}`);
@@ -443,7 +414,4 @@ export const createOrden = async (ordenData: any): Promise<{ success: boolean; m
     return { success: false, message: "Error al crear la orden" };
   }
 };
-function usuariosEntity() {
-    throw new Error("Function not implemented.");
-}
 
